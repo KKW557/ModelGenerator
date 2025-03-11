@@ -1,0 +1,58 @@
+name: Generate
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Install Xvfb
+      run: sudo apt-get install -y xvfb
+
+    - name: Generate
+      run: xvfb-run --auto-servernum ./gradlew runClient
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+
+    - name: Switch to generated branch and clean
+      run: |
+        git checkout -B generated
+        git rm -r *
+        git commit --allow-empty -m "Clean generated branch"
+
+    - name: Copy generated files
+      run: |
+        cp -r ./run/generated/* .
+
+    - name: Commit and push to generated branch
+      run: |
+        git add .
+        git commit -m "Upload new generated files from run on $(date)"
+        git push origin generated --force
