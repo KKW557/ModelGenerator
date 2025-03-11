@@ -44,16 +44,12 @@ jobs:
 
         git checkout --orphan generated
 
-        git rm -rf . > /dev/null 2>&1 || true
-        git clean -fdx --quiet
+        git rm -rf .
 
-        git commit --allow-empty -m "Clean generated branch"
+        cp -r ./run/generated/. .
 
-        cp -a ./run/generated/. .
-        ls -la
-
-        git add -A
-        git commit -m "Auto-generated at $(date +'%Y-%m-%d %H:%M')"
+        git add .
+        git commit -m "Auto generated at $(date)"
         git push origin generated --force
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
