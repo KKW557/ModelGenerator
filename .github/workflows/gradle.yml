@@ -24,9 +24,12 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
+    - name: Install Xvfb
+      run: sudo apt-get install -y xvfb
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
     - name: Generate
-      run: ./gradlew runClient
+      run: xvfb-run --auto-servernum ./gradlew runClient
       
