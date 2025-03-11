@@ -42,7 +42,7 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
         
-        git checkout -B generated
+        git checkout -B --orphan generated
         git ls-files | xargs -r git rm || true
         git clean -fd
         git commit --allow-empty -m "Clean generated branch"
