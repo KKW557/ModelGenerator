@@ -46,7 +46,7 @@ jobs:
 
         git rm -rf .
 
-        cp -r ./run/generated/. .
+        cp -r ../run/generated/* .
 
         git add .
         git commit -m "Auto generated at $(date)"
