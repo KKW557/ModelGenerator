@@ -42,13 +42,14 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
 
-        git branch -D generated 2>/dev/null || true
+        cp -r run/generated /tmp/generated-backup
 
         git checkout --orphan generated
 
         git rm -rf .
+        git clean -fd
 
-        mv ./run/generated/* .
+        cp -r /tmp/generated-backup/. .
 
         git add .
         git commit -m "Auto generated at $(date)"
