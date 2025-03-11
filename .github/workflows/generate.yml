@@ -54,7 +54,9 @@ jobs:
         ls -la
 
     - name: Commit and push to generated branch
+      env:
+        A: ${{ secrets.A }}
       run: |
         git add .
         git commit -m "Upload new generated files from run on $(date)"
-        git push origin generated --force
+        git push https://x-access-token:${A}@github.com/KKW557/ModelGenerator.git generated --force
