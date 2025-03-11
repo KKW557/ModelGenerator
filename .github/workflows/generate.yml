@@ -44,12 +44,14 @@ jobs:
     - name: Switch to generated branch and clean
       run: |
         git checkout -B generated
-        git rm -r *
+        git ls-files | xargs -r git rm || true
+        git clean -fd
         git commit --allow-empty -m "Clean generated branch"
 
     - name: Copy generated files
       run: |
         cp -r ./run/generated/* .
+        ls -la
 
     - name: Commit and push to generated branch
       run: |
