@@ -50,6 +50,7 @@ tasks.withType(JavaCompile).configureEach {
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         it.options.release.set(targetJavaVersion)
     }
+    it.options.compilerArgs.add('--enable-preview')
 }
 
 java {
@@ -85,4 +86,8 @@ publishing {
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
     }
+}
+
+runClient {
+    jvmArgs('--enable-preview')
 }
