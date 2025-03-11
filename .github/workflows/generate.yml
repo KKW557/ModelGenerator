@@ -11,12 +11,13 @@ jobs:
 
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
 
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Set up JDK 21
       uses: actions/setup-java@v4
@@ -36,27 +37,14 @@ jobs:
     - name: Generate
       run: xvfb-run --auto-servernum ./gradlew runClient
 
-    - name: Configure Git
+    - name: Commit & Push
       run: |
-        git config --global user.name "GitHub Action"
-        git config --global user.email "action@github.com"
-
-    - name: Switch to generated branch and clean
-      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        
         git checkout -B generated
-        git ls-files | xargs -r git rm || true
-        git clean -fd
-        git commit --allow-empty -m "Clean generated branch"
-
-    - name: Copy generated files
-      run: |
-        cp -r ./run/generated/* .
-        ls -la
-
-    - name: Commit and push to generated branch
+        git add -A
+        git commit -m "Auto-generated at $(date +'%Y-%m-%d %H:%M')"
+        git push origin generated --force
       env:
-        SECRET: ${{ secrets.SECRET }}
-      run: |
-        git add .
-        git commit -m "Upload new generated files from run on $(date)"
-        git push https://x-access-token:${SECRET}@github.com/KKW557/ModelGenerator generated --force
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
