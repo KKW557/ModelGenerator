@@ -42,15 +42,17 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
 
-        cp -rv ./run/generated/* .
-        ls -la
-
         git checkout --orphan generated
+
         git rm -rf . > /dev/null 2>&1 || true
-        git clean -fdx
+        git clean -fdx --quiet
+
         git commit --allow-empty -m "Clean generated branch"
 
-        git add .
+        cp -a ./run/generated/. .
+        ls -la
+
+        git add -A
         git commit -m "Auto-generated at $(date +'%Y-%m-%d %H:%M')"
         git push origin generated --force
       env:
