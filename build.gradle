@@ -86,7 +86,3 @@ publishing {
         // retrieving dependencies.
     }
 }
-
-tasks.named("runClient") {
-    jvmArgs "-Djava.awt.headless=true"
-}
